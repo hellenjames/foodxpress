@@ -1,12 +1,13 @@
-import {View, Image, TextInput, Text, TouchableOpacity} from 'react-native';
+import {View, Image, TextInput, Text, TouchableOpacity,ScrollView} from 'react-native';
 import {getAuth, createUserWithEmailAndPassword} from 'firebase/auth';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
+import {doc, setDoc, getFirestore} from 'firebase/firestore';
 
 import {app} from '../firebase';
 import {useState} from 'react';
 
-// import {collection, addDoc} from 'firebase/firestore';
+
+// import {doc, setDoc} from 'firebase/firestore';
 
 function Signupscreen({navigation}) {
   // const navigate = useNavigate();
@@ -14,10 +15,12 @@ function Signupscreen({navigation}) {
   const [lastname, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const auth = getAuth(app);
   const [error, setError] = useState({});
 
   function handleClick(e) {
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
     const errors = {};
     if (firstname === '') {
       errors.firstname = 'Please enter your First Name';
@@ -36,20 +39,26 @@ function Signupscreen({navigation}) {
     if (Object.keys(error).length === 0) {
       console.log(error);
       createUserWithEmailAndPassword(auth, email, password)
-        .then(userCredential => {
+        .then(async userCredential => {
           // Signed up
           const user = userCredential.user;
           console.log(user);
-          if(user){
-
-            navigation.navigate("login");
+          if (user) {
+            await setDoc(doc(db, 'users', user.uid), {
+              firstname: firstname,
+              lastname: lastname,
+              email: email,
+              password: password,
+            });
+            navigation.navigate('login');
           }
           // ...
         })
+        // console.log(user.uid)
         .catch(error => {
           const errorCode = error.code;
           const errorMessage = error.message;
-          console.log(errorMessage)
+          console.log(errorMessage);
           // ..
         });
 
@@ -59,6 +68,7 @@ function Signupscreen({navigation}) {
   }
 
   return (
+  <ScrollView>
     <View className="mx-5">
       <Image source={require('../../images/logo.png')} />
       <Text className="text-[#FF7356]">
@@ -71,7 +81,7 @@ function Signupscreen({navigation}) {
           setFirstName(firstName);
         }}
       />
- <Text className="text-[#FF7356] ">
+      <Text className="text-[#FF7356] ">
         {error.lastname && error.lastname}
       </Text>
 
@@ -103,7 +113,6 @@ function Signupscreen({navigation}) {
         }}
       />
 
-     
       <TouchableOpacity onPress={handleClick}>
         <Text className="text-2xl text-[#F0F0F0] flex text-center bg-[#FF7356] rounded-full p-3 ">
           Create Account
@@ -115,19 +124,22 @@ function Signupscreen({navigation}) {
         <View className="bg-gray-300 h-px flex-1" />
       </View>
       <View className="my-1">
-      <TouchableOpacity className="flex-row  p-1   bg-[#F0F0F0] border-[#78787A]   rounded-full gap-2 ">
-      <Image source={require('../../images/google.png')} />
+        <TouchableOpacity className="flex-row  p-1   bg-[#F0F0F0] border-[#78787A]   rounded-full gap-2 ">
+          <Image source={require('../../images/google.png')} />
 
-      <Text className="font-semibold text-black text-2xl " >
-        Sign UP With Google
-      </Text>
-      </TouchableOpacity>
+          <Text className="font-semibold text-black text-2xl ">
+            Sign UP With Google
+          </Text>
+        </TouchableOpacity>
       </View>
       <Text className="text-[#78787A] text-center   mt-5">
         Already Have an Account?
+        <TouchableOpacity onPress={()=>navigation.navigate('login')}>
         <Text className="text-[#FF7356]">Log in </Text>
+        </TouchableOpacity>
       </Text>
     </View>
+    </ScrollView>
   );
 }
 

@@ -1,9 +1,9 @@
 import {View, Text} from 'react-native';
-function Allfood() {
+function Menuscreen() {
   return(
   <View>
     <Text>allfood</Text>
   </View>
   )
 }
-export default Allfood;
+export default Menuscreen;
