@@ -34,7 +34,7 @@ function App() {
   const [showStack, setShowStack] = useState(false);
   function StackNavigation() {
     return (
-      <Stack.Navigator initialRouteName="signup">
+      <Stack.Navigator initialRouteName="home">
         <Stack.Screen name="home" component={Homescreen} />
         <Stack.Screen name="login" component={Loginscreen} />
         <Stack.Screen name="signup" component={Signupscreen} />

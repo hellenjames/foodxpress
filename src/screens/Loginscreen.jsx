@@ -47,6 +47,7 @@ function Loginscreen({navigation}) {
         .catch(error => {
           const errorCode = error.code;
           const errorMessage = error.message;
+          console.log(errorMessage)
         });
     }
   }
@@ -94,7 +95,9 @@ function Loginscreen({navigation}) {
       </Text>
       <Text className="text-[#78787A] text-center ">
         Don’t Have an Account?
+        <TouchableOpacity onPress={()=>navigation.navigate('signup')}>
         <Text className="text-[#FF7356]">Sign Up </Text>
+        </TouchableOpacity>
       </Text>
     </View>
     </ScrollView>

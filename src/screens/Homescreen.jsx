@@ -4,7 +4,9 @@ import {
   TextInput,
   Image,
   StyleSheet,
-  TouchableOpacity,
+  TouchableOpacity
+  ,
+  
 } from 'react-native';
 import {Data} from '../Data';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -18,20 +20,18 @@ import {db} from '../firebase';
 function Homescreen({navigation}) {
   const {currentUserId, setCurrentUserId, loggedInUser, setLoggedInUser} =
     useContext(StateContext);
-  console.log(currentUserId);
+  // console.log(currentUserId);
 
-  console.log(Data);
+  // console.log(Data);
 
   useEffect(() => {
-    console.log(currentUserId);
+    // console.log(currentUserId);
 
     async function getUserDoc() {
       const docRef = doc(db, 'users', currentUserId);
-      console.log(db);
-
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
-        console.log('Document data:', docSnap.data());
+        // console.log('Document data:', docSnap.data());
         setLoggedInUser(docSnap.data());
       } else {
         // docSnap.data() will be undefined in this case
@@ -45,6 +45,8 @@ function Homescreen({navigation}) {
     <View className="mx-5">
       {/* {console.log(loggedInUser.firstname)} */}
       <Text className="font-bold text-black">
+     <Image  source={('require(../../images/avatar.jpg')}/>
+
         Hi,{loggedInUser && loggedInUser.firstname}
       </Text>
       <Icon name="home" color="black" size={30} />
